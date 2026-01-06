@@ -19,18 +19,18 @@ const io = socketIo(server, {
 app.use(cors());
 app.use(express.json());
 
-// health check
+
 app.get('/', (req, res) => {
   res.json({ message: 'Task Manager Backend Running 🚀' });
 });
 
-// inject io
+
 app.use((req, res, next) => {
   req.io = io;
   next();
 });
 
-// routes
+
 app.use('/api/tasks', taskRoutes);
 
 io.on('connection', (socket) => {

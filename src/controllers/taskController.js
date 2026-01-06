@@ -2,7 +2,7 @@ const pool = require('../db/db');
 
 const getAllTasks = async (req, res) => {
     try {
-        console.log('GET /api/tasks request. Query:', req.query); // DEBUG LOG
+        console.log('GET /api/tasks request. Query:', req.query); 
         const { status } = req.query;
         let query = 'SELECT * FROM tasks';
         const params = [];
