@@ -21,7 +21,7 @@ app.use(express.json());
 
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Task Manager Backend Running 🚀' });
+  res.json({ message: 'Task Manager Backend Running' });
 });
 
 
