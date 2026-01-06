@@ -28,6 +28,10 @@ app.use((req, res, next) => {
 });
 
 // Routes
+app.get('/', (req, res) => {
+    res.json({ message: 'Backend is live on Render 🚀' });
+});
+
 app.use('/api/tasks', taskRoutes);
 
 // Socket Connection Handler
