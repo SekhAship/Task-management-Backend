@@ -9,41 +9,35 @@ const taskRoutes = require('./routes/taskRoutes');
 const app = express();
 const server = http.createServer(app);
 
-// Socket.io Setup
 const io = socketIo(server, {
-    cors: {
-        origin: "*", // Allow all for dev simplicity/assignment
-        methods: ["GET", "POST", "PATCH", "DELETE"]
-    }
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST", "PATCH", "DELETE"]
+  }
 });
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Inject io into request object
-app.use((req, res, next) => {
-    req.io = io;
-    next();
-});
-
-// Routes
+// health check
 app.get('/', (req, res) => {
-    res.json({ message: 'Backend is live on Render 🚀' });
+  res.json({ message: 'Task Manager Backend Running 🚀' });
 });
 
+// inject io
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
+// routes
 app.use('/api/tasks', taskRoutes);
 
-// Socket Connection Handler
 io.on('connection', (socket) => {
-    console.log('New client connected', socket.id);
-    socket.on('disconnect', () => {
-        console.log('Client disconnected', socket.id);
-    });
+  console.log('Client connected:', socket.id);
 });
 
 const PORT = process.env.PORT || 5000;
-
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
