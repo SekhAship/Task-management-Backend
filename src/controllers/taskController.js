@@ -24,15 +24,22 @@ const getAllTasks = async (req, res) => {
 
 const createTask = async (req, res) => {
     try {
-        const { title, description, start_time, end_time, has_alarm } = req.body;
-        if (!title) return res.status(400).json({ error: 'Title is required' });
+        const { title, description } = req.body;
+
+        if (!title) {
+            return res.status(400).json({ error: 'Title is required' });
+        }
 
         const newTask = await pool.query(
-            'INSERT INTO tasks (title, description, start_time, end_time, has_alarm) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [title, description, start_time || null, end_time || null, has_alarm || false]
+            `INSERT INTO tasks (title, description)
+             VALUES ($1, $2)
+             RETURNING *`,
+            [title, description || null]
         );
 
         const task = newTask.rows[0];
+
+        // Emit socket event
         req.io.emit('taskCreated', task);
 
         res.status(201).json(task);
@@ -41,6 +48,7 @@ const createTask = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
 
 const updateTaskStatus = async (req, res) => {
     try {
